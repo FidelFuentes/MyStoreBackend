@@ -8,14 +8,14 @@ const {logErrors,errorHandler,boomErrorHandler} = require('./middlewares/errorHa
 
 const app = express()
 
-const port= 3001;
+const port= process.env.PORT || 3001;
 
 app.use(express.json())
 
 const whiteList=['http://localhost:8080','https://myapp.com'] // asi le digo desde donde puedo enviar request
 const options = {
   origin: (origin, callback) => {
-    if (whiteList.includes(origin)){
+    if (whiteList.includes(origin) || !origin){
       callback(null,true)
     } else {
       callback( new Error('no te lo permito'))
@@ -25,7 +25,7 @@ const options = {
 
 app.use(cors(options))// de esta manera aceptaria cualquier origen de dominio si no le pongo options
 
-app.get('/',(req, res)=> {
+app.get('/api/',(req, res)=> {
 
   res.send('holaaa')
 })
@@ -33,7 +33,7 @@ app.get('/',(req, res)=> {
 
 
 
-app.get('/nueva-ruta',(req, res)=> {
+app.get('/api/nueva-ruta',(req, res)=> {
 
   res.send('soy un nuevo endpoint')
 })
